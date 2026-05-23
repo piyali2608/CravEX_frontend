@@ -3,6 +3,7 @@ import {
   BellRing, ChefHat, CheckSquare, History, 
   Clock, Search 
 } from "lucide-react";
+import { useMediaQuery } from "../hooks/useMediaQuery";
 
 // Mock orders for now FIFO pipeine
 const initialOrders = [
@@ -16,6 +17,8 @@ const initialOrders = [
 export default function OrderManagement({ showToast }) {
   const [orders, setOrders] = useState(initialOrders);
   const [search, setSearch] = useState("");
+  const [isFocused, setIsFocused] = useState(false);
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
   const updateStatus = (id, newStatus) => {
     setOrders(prev => prev.map(o => o.id === id ? { 
@@ -36,7 +39,7 @@ export default function OrderManagement({ showToast }) {
   return (
     <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 1rem" }}>
       <div style={{ marginBottom: "2.5rem" }}>
-        <h1 style={{ fontFamily: "'Syne',sans-serif", fontSize: "2.5rem", fontWeight: 800, color: "var(--text)", marginBottom: "0.5rem" }}>
+        <h1 style={{ fontFamily: "'Syne',sans-serif", fontSize: isMobile ? "2rem" : "2.5rem", fontWeight: 800, color: "var(--text)", marginBottom: "0.5rem" }}>
           Order Management <span style={{ color: "var(--accent)" }}>Dashboard</span>
         </h1>
         <p style={{ color: "var(--text3)", fontSize: "1rem", fontWeight: 500 }}>
@@ -45,15 +48,35 @@ export default function OrderManagement({ showToast }) {
       </div>
 
       <div style={{ marginBottom: "2rem", position: "relative", maxWidth: 450 }}>
-        <Search style={{ position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)", color: "var(--text3)" }} size={20} />
+        <Search style={{ 
+          position: "absolute", left: 16, top: "50%", 
+          transform: "translateY(-50%)", 
+          color: isFocused ? "var(--accent)" : "var(--text3)",
+          transition: "color 0.2s" 
+        }} size={20} />
         <input 
           placeholder="Search by Order ID or Customer Name..." 
-          value={search} onChange={(e) => setSearch(e.target.value)}
-          style={{ width: "100%", padding: "14px 16px 14px 48px", borderRadius: 14, border: "1.5px solid var(--border)", background: "var(--surface)", color: "var(--text)", fontSize: "0.95rem", outline: "none", boxShadow: "var(--shadow)" }}
+          value={search} 
+          onChange={(e) => setSearch(e.target.value)}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
+          style={{ 
+            width: "100%", padding: "14px 16px 14px 48px", borderRadius: 14, 
+            border: `1.5px solid ${isFocused ? "var(--accent)" : "var(--border)"}`, 
+            background: "var(--surface)", color: "var(--text)", fontSize: "0.95rem", 
+            outline: "none", 
+            boxShadow: isFocused ? "0 0 0 4px var(--accent-glow)" : "var(--shadow)",
+            transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)"
+          }}
         />
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 20, alignItems: "start" }}>
+      <div style={{ 
+        display: "grid", 
+        gridTemplateColumns: isMobile ? "1fr" : "repeat(4, 1fr)", 
+        gap: 20, 
+        alignItems: "start" 
+      }}>
         {columns.map(col => (
           <div key={col.id} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "8px 0", fontWeight: 800, color: col.color, borderBottom: `2px solid ${col.color}` }}>
@@ -77,7 +100,6 @@ export default function OrderManagement({ showToast }) {
 }
 
 function OrderCard({ order, onUpdate, isHistory }) {
-  // Always display the 'Incoming' time so the queue feels consistent
   const arrivalTime = order.statusTimestamps.incoming.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", hour12: true });
 
   return (

@@ -1,0 +1,23 @@
+:root {
+  --primary-orange: #f97316;
+  --bg-color: #fcfcfc;
+  --sidebar-width: 260px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body { 
+  font-family: 'Inter', sans-serif; 
+  background-color: var(--bg-color); 
+}
+
+/* Hide Sidebar on Desktop by default if you want to handle it via JS, 
+   or use media queries to hide it on Mobile */
+@media (max-width: 1024px) {
+  .desktop-sidebar { display: none !important; }
+  .mobile-menu-btn { display: block !important; }
+}
+
+@media (min-width: 1025px) {
+  .mobile-menu-btn { display: none !important; }
+}

@@ -7,9 +7,11 @@ import DishModal       from "../components/DishModal";
 import DeleteModal     from "../components/DeleteModal";
 
 import { useMenu }     from "../hooks/useMenu";
+import { useMediaQuery } from "../hooks/useMediaQuery";
 
 export default function MenuManagement({ showToast }) {
   const { menu, load, add, update, remove } = useMenu(showToast);
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
   const [search, setSearch] = useState("");
   const [sort,   setSort]   = useState("id");
@@ -57,21 +59,22 @@ export default function MenuManagement({ showToast }) {
   };
 
   return (
-    <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+    <div style={{ maxWidth: 1100, margin: "0 auto", padding: isMobile ? "0 0.5rem" : "0" }}>
       <div style={{
-        display: "flex", alignItems: "flex-end",
+        display: "flex", alignItems: isMobile ? "flex-start" : "flex-end",
         justifyContent: "space-between",
+        flexDirection: isMobile ? "column" : "row",
         marginBottom: "2rem", flexWrap: "wrap", gap: 12,
       }}>
         <div>
           <h1 style={{
-            fontFamily: "'Syne',sans-serif", fontSize: "2.1rem",
+            fontFamily: "'Syne',sans-serif", fontSize: isMobile ? "1.8rem" : "2.1rem",
             fontWeight: 800, letterSpacing: "-1px", lineHeight: 1.1, color: "var(--text)",
           }}>
             Menu Management <span style={{ color: "var(--accent)" }}>Dashboard</span>
           </h1>
           <p style={{ color: "var(--text3)", fontSize: "0.93rem", marginTop: 4, fontWeight: 300 }}>
-            Manage your dishes — add, update, and remove items
+            Manage your dishes - add, update, delete
           </p>
         </div>
 
