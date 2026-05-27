@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { DollarSign, Utensils, Activity } from "lucide-react";
+import { IndianRupee, Utensils, Activity } from "lucide-react"; // Swapped DollarSign for IndianRupee
 import { useMediaQuery } from "../hooks/useMediaQuery";
 
 export default function Analytics() {
@@ -42,7 +42,6 @@ export default function Analytics() {
         gap: 16 
       }}>
         <div style={{ paddingLeft: "4px" }}>
-          {/* Main Heading upgraded to match the exact font profile of Menu Management */}
           <h1 style={{ 
             fontFamily: "'Syne', sans-serif", 
             fontSize: "1.3rem", 
@@ -107,7 +106,7 @@ export default function Analytics() {
       {/* Aggregate Scorecard Dashboard Row */}
       <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: "1rem", width: "100%" }}>
         
-        {/* Revenue Metric Block */}
+        {/* Revenue Metric Block - Updated badge icon to match image_774efb.png */}
         <div className="floating-glass" style={{ 
           flex: 1, background: "var(--surface)", borderRadius: "16px", padding: "20px", display: "flex", alignItems: "center", gap: 16 
         }}>
@@ -117,7 +116,7 @@ export default function Analytics() {
             display: "flex", alignItems: "center", justifyContent: "center", 
             color: "var(--accent)", boxShadow: "0 4px 12px var(--accent-glow)" 
           }}>
-            <DollarSign size={18} strokeWidth={2.5} />
+            <IndianRupee size={18} strokeWidth={2.5} />
           </div>
           <div style={{ display: "flex", flexDirection: "column" }}>
             <span style={{ color: "var(--text3)", fontSize: "0.7rem", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.05em" }}>
@@ -263,7 +262,7 @@ export default function Analytics() {
                       fontWeight={800}
                       fontFamily="monospace"
                     >
-                      {point.value}
+                      ₹{point.value}
                     </text>
                   </g>
 
