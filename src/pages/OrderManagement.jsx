@@ -5,7 +5,8 @@ import { useMediaQuery } from "../hooks/useMediaQuery";
 const initialOrders = [
   { id: "CX-26-05-1", customer: "Piyali Barman", items: "1x Paneer Butter Masala, 2x Garlic Naan", total: 190, status: "incoming", statusTimestamps: { incoming: new Date(Date.now() - 300000) } },
   { id: "CX-26-05-2", customer: "Aryan", items: "1x Veg Hakka Noodles", total: 150, status: "preparing", statusTimestamps: { incoming: new Date(Date.now() - 900000), preparing: new Date(Date.now() - 300000) } },
-  { id: "CX-26-05-3", customer: "Deepak", items: "1x Chicken Biryani", total: 220, status: "ready", statusTimestamps: { incoming: new Date(Date.now() - 1500000), preparing: new Date(Date.now() - 900000), ready: new Date(Date.now() - 120000) } }
+  { id: "CX-26-05-3", customer: "Deepak", items: "1x Chicken Biryani", total: 220, status: "ready", statusTimestamps: { incoming: new Date(Date.now() - 1500000), preparing: new Date(Date.now() - 900000), ready: new Date(Date.now() - 120000) } },
+  { id: "CX-26-05-4", customer: "Shreeraj M", items: "1x Kadhai Paneer, 2x Butter Roti", total: 240, status: "incoming", statusTimestamps: { incoming: new Date(Date.now() - 60000) } }
 ];
 
 export default function OrderManagement({ showToast }) {
@@ -44,11 +45,11 @@ export default function OrderManagement({ showToast }) {
       {/* Title Header */}
       <div style={{ paddingLeft: "4px" }}>
         <h1 style={{ fontFamily: "'Syne', sans-serif", fontSize: "1.3rem", fontWeight: 800, textShadow: "0 0 20px var(--accent-glow)" }}>
-          ORDER <span style={{ color: "var(--accent)" }}>MANAGEMENT</span>
+          ORDER <span style={{ color: "var(--accent)" }}>LIVE STREAM</span>
         </h1>
       </div>
 
-      {/* High-Performance Control Header Container */}
+      {/* Control Header Container */}
       <div className="floating-glass" style={{
         display: "flex",
         flexDirection: isMobile ? "column" : "row",
@@ -61,8 +62,8 @@ export default function OrderManagement({ showToast }) {
         width: "100%",
         boxSizing: "border-box"
       }}>
-        {/* Anti-clip Fluid Search Field */}
-        <div style={{ position: "relative", flex: 1, minWidth: "180px" }}>
+        {/* Search Field */}
+        <div style={{ position: "relative", flex: 1, minWidth: isMobile ? "100%" : "180px" }}>
           <div style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: isFocused ? "var(--accent)" : "var(--text3)", display: "flex", alignItems: "center" }}>
             <Search size={15} strokeWidth={2.5} />
           </div>
@@ -76,13 +77,14 @@ export default function OrderManagement({ showToast }) {
           />
         </div>
 
-        {/* Anti-clip Swipeable Workflow Toggles */}
+        {/* Swipeable Tabs */}
         {search.length === 0 && (
           <div style={{ 
             display: "flex", gap: 2, padding: "2px",
             background: "var(--input-bg)", borderRadius: "10px", border: "1.5px solid var(--border)",
-            overflowX: "auto", WebkitOverflowScrolling: "touch"
-          }}>
+            overflowX: "auto", WebkitOverflowScrolling: "touch",
+            width: isMobile ? "100%" : "auto"
+          }} className="hide-scrollbar">
             {columns.map(col => {
               const isSelected = activeTab === col.id;
               return (
@@ -96,7 +98,8 @@ export default function OrderManagement({ showToast }) {
                     fontWeight: 700, fontSize: "0.76rem", cursor: "pointer",
                     display: "flex", alignItems: "center", gap: 5,
                     boxShadow: isSelected ? `0 2px 8px ${col.color}40` : "none",
-                    transition: "all 0.15s ease", whiteSpace: "nowrap"
+                    transition: "all 0.15s ease", whiteSpace: "nowrap",
+                    flex: isMobile ? 1 : "auto", justifyContent: "center"
                   }}
                 >
                   {col.icon} {col.title}
@@ -107,16 +110,22 @@ export default function OrderManagement({ showToast }) {
         )}
       </div>
 
-      {/* Grid Manifest Cards Layout Display */}
+      {/* Grid Manifest Cards Display */}
       {filteredOrders.length > 0 ? (
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(310px, 1fr))", gap: 12, width: "100%" }}>
+        <div style={{ 
+          display: "grid", 
+          gridTemplateColumns: isMobile ? "1fr" : "repeat(auto-fill, minmax(320px, 1fr))", 
+          gap: 12, 
+          width: "100%" 
+        }}>
           {filteredOrders.map(order => (
             <OrderCard 
               key={order.id} 
               order={order} 
-              onUpdate={updateStatus} 
-              isHistory={order.status === "completed"} 
-              statusColor={columns.find(c => c.id === (order.status === "completed" ? "history" : order.status))?.color || "var(--accent)"} 
+              onUpdate={updateStatus}
+              isHistory={order.status === "completed"}
+              isMobile={isMobile}
+              statusColor={columns.find(c => c.id === (order.status === "completed" ? "history" : order.status))?.color || "var(--accent)"}
             />
           ))}
         </div>
@@ -126,30 +135,35 @@ export default function OrderManagement({ showToast }) {
           <p style={{ fontSize: "0.82rem", fontWeight: 700 }}>No matching orders found</p>
         </div>
       )}
+
+      <style>{`
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      `}</style>
     </div>
   );
 }
 
-function OrderCard({ order, onUpdate, isHistory, statusColor }) {
+function OrderCard({ order, onUpdate, isHistory, statusColor, isMobile }) {
   const arrivalTime = order.statusTimestamps.incoming.toLocaleTimeString("en-IN", { hour: "numeric", minute: "2-digit", hour12: true });
-
   return (
     <div className="floating-glass" style={{ 
       background: "var(--surface)", 
       borderLeft: `5px solid ${statusColor} !important`,
-      borderRadius: "12px", padding: "16px", 
+      borderRadius: "12px", 
+      padding: isMobile ? "14px" : "16px",
     }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
-        <span style={{ fontFamily: "'Syne', sans-serif", mountaineer: "none", fontWeight: 800, color: statusColor, fontSize: "0.78rem" }}>{order.id}</span>
+        <span style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, color: statusColor, fontSize: "0.78rem" }}>{order.id}</span>
         <div style={{ fontSize: "0.72rem", color: "var(--text3)", fontWeight: 700, display: "flex", alignItems: "center", gap: 4, background: "var(--surface2)", padding: "3px 8px", borderRadius: 6 }}>
           <Clock size={11} /> {arrivalTime}
         </div>
       </div>
       
-      <div style={{ fontWeight: 800, fontSize: "1rem", marginBottom: 2, color: "var(--text)" }}>{order.customer}</div>
+      <div style={{ fontWeight: 800, fontSize: isMobile ? "0.95rem" : "1rem", marginBottom: 2, color: "var(--text)" }}>{order.customer}</div>
       <div style={{ fontSize: "0.8rem", color: "var(--text2)", marginBottom: 14, lineHeight: 1.4, fontWeight: 500 }}>{order.items}</div>
       
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1.5px solid var(--border)", paddingTop: 10 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1.5px solid var(--border)", paddingTop: 10, flexWrap: "wrap", gap: 8 }}>
         <span style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: "1.1rem", color: "var(--text)" }}>₹{order.total}</span>
         {isHistory ? (
           <span style={{ fontSize: "0.68rem", fontWeight: 800, color: "var(--success)", background: "rgba(16, 185, 129, 0.1)", padding: "4px 10px", borderRadius: 6, border: "1px solid rgba(16, 185, 129, 0.2)" }}>FULFILLED</span>
@@ -168,9 +182,13 @@ function OrderCard({ order, onUpdate, isHistory, statusColor }) {
 function ActionButton({ onClick, text, color }) {
   return (
     <button onClick={onClick} style={{ 
-      background: color, color: "#fff", border: "none", padding: "6px 12px", borderRadius: "6px", 
-      fontSize: "0.74rem", fontWeight: 700, cursor: "pointer", boxShadow: "0 2px 6px rgba(0,0,0,0.05)"
-    }}>
+      background: color, color: "#fff", border: "none", padding: "6px 14px", borderRadius: "6px",
+      fontSize: "0.74rem", fontWeight: 700, cursor: "pointer", boxShadow: "0 2px 6px rgba(0,0,0,0.05)",
+      transition: "transform 0.1s ease"
+    }}
+    onMouseDown={(e) => e.currentTarget.style.transform = "scale(0.96)"}
+    onMouseUp={(e) => e.currentTarget.style.transform = "scale(1)"}
+    >
       {text}
     </button>
   );
