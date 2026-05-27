@@ -13,5 +13,9 @@ export function useToast() {
     }, 3200);
   }, []);
 
-  return { toasts, show };
+  const dismiss = useCallback((id) => {
+    setToasts((prev) => prev.filter((t) => t.id !== id));
+  }, []);
+
+  return { toasts, show, dismiss };
 }

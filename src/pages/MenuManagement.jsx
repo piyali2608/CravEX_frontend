@@ -11,18 +11,26 @@ import { useMediaQuery } from "../hooks/useMediaQuery";
 
 export default function MenuManagement({ showToast }) {
   const { menu, load, add, update, remove } = useMenu(showToast);
-  const isMobile = useMediaQuery("(max-width: 768px)");
-
   const [search, setSearch] = useState("");
   const [sort,   setSort]   = useState("id");
 
-  // Modals
   const [dishModal,   setDishModal]   = useState(false);
   const [editDish,    setEditDish]    = useState(null);
   const [deleteModal, setDeleteModal] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState(null);
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
-  useEffect(() => { load(); }, [load]);
+  // EXPLICIT DATABASE FETCH CATCH TRACKER
+  useEffect(() => {
+    const initializeMenu = async () => {
+      try {
+        await load();
+      } catch (error) {
+        showToast("Failed to load menu. Fetch error.", "error");
+      }
+    };
+    initializeMenu();
+  }, [load]);
 
   const filtered = menu
     .filter((d) =>
@@ -40,88 +48,70 @@ export default function MenuManagement({ showToast }) {
   const openDelete  = (dish) => { setDeleteTarget(dish); setDeleteModal(true); };
   const closeDelete = () => { setDeleteModal(false); setDeleteTarget(null); };
 
+  // EXPLICIT SAVE & UPDATE POP-UP HANDLERS
   const handleSubmit = async (dish) => {
     try {
-      editDish ? await update(dish) : await add(dish);
+      if (editDish) {
+        await update(dish);
+        showToast("Dish details updated successfully!", "success");
+      } else {
+        await add(dish);
+        showToast("New dish added to Menu!", "success");
+      }
       closedish();
-    } catch {
-      showToast("Operation failed", "error");
+    } catch (error) {
+      // Triggers pop-up instantly if API server fails or rejects the add
+      showToast(editDish ? "Failed to update dish." : "Dish not added.", "error");
     }
   };
 
   const handleDelete = async () => {
     try {
       await remove(deleteTarget.id);
-    } catch {
-      showToast("Delete failed", "error");
+      showToast(`Dish "${deleteTarget?.name}" deleted successfully.`, "success");
+    } catch (error) {
+      showToast("Delete operation failed.", "error");
     }
     closeDelete();
   };
 
   return (
-    <div style={{ maxWidth: 1100, margin: "0 auto", padding: isMobile ? "0 0.5rem" : "0" }}>
-      <div style={{
-        display: "flex", alignItems: isMobile ? "flex-start" : "flex-end",
-        justifyContent: "space-between",
-        flexDirection: isMobile ? "column" : "row",
-        marginBottom: "2rem", flexWrap: "wrap", gap: 12,
-      }}>
-        <div>
-          <h1 style={{
-            fontFamily: "'Syne',sans-serif", fontSize: isMobile ? "1.8rem" : "2.1rem",
-            fontWeight: 800, letterSpacing: "-1px", lineHeight: 1.1, color: "var(--text)",
-          }}>
-            Menu Management <span style={{ color: "var(--accent)" }}>Dashboard</span>
-          </h1>
-          <p style={{ color: "var(--text3)", fontSize: "0.93rem", marginTop: 4, fontWeight: 300 }}>
-            Manage your dishes - add, update, delete
-          </p>
-        </div>
+    <div style={{ maxWidth: 1100, margin: "0 auto", width: "100%", boxSizing: "border-box", display: "flex", flexDirection: "column", gap: "1rem" }}>
+      
+      <div style={{ paddingLeft: "4px" }}>
+        <h1 style={{ fontFamily: "'Syne', sans-serif", fontSize: "1.3rem", fontWeight: 800, textShadow: "0 0 20px var(--accent-glow)" }}>
+          MENU <span style={{ color: "var(--accent)" }}>MANAGEMENT</span>
+        </h1>
+      </div>
 
+      <div className="floating-glass" style={{ 
+        display: "flex", flexDirection: isMobile ? "column" : "row",
+        alignItems: isMobile ? "stretch" : "center", justifyContent: "space-between",
+        gap: 12, background: "var(--surface)", padding: "10px 12px", borderRadius: "14px", width: "100%"
+      }}>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <Toolbar menu={menu} search={search} onSearch={setSearch} sort={sort} onSort={setSort} />
+        </div>
+        
         <button
           onClick={openAdd}
           style={{
-            background: "var(--accent)", color: "#fff",
-            border: "none", borderRadius: 10,
-            padding: "11px 20px",
-            fontFamily: "'Syne',sans-serif", fontSize: "0.97rem",
-            fontWeight: 700, cursor: "pointer",
-            display: "flex", alignItems: "center", gap: 8,
-            boxShadow: "0 4px 18px var(--accent-glow)",
-            transition: "background 0.18s, transform 0.12s",
+            background: "var(--accent)", color: "#fff", border: "none", borderRadius: "8px",
+            padding: "0 16px", height: "36px", fontFamily: "'DM Sans', sans-serif", fontSize: "0.8rem",
+            fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyJoin: "center", gap: 6,
+            boxShadow: "0 2px 8px var(--accent-glow)", transition: "all 0.15s ease", whiteSpace: "nowrap"
           }}
-          onMouseEnter={(e) => { e.currentTarget.style.background = "var(--accent2)"; e.currentTarget.style.transform = "translateY(-1px)"; }}
-          onMouseLeave={(e) => { e.currentTarget.style.background = "var(--accent)";  e.currentTarget.style.transform = "translateY(0)"; }}
+          onMouseEnter={(e) => { e.currentTarget.style.background = "var(--accent2)"; }}
+          onMouseLeave={(e) => { e.currentTarget.style.background = "var(--accent)"; }}
         >
-          <Plus size={20} strokeWidth={2.5} /> Add Dish
+          <Plus size={14} strokeWidth={2.5} /> Add Dish
         </button>
       </div>
 
-      <Toolbar
-        menu={menu}
-        search={search} onSearch={setSearch}
-        sort={sort}     onSort={setSort}
-      />
+      <MenuTable dishes={filtered} onEdit={openEdit} onDelete={openDelete} />
 
-      <MenuTable
-        dishes={filtered}
-        onEdit={openEdit}
-        onDelete={openDelete}
-      />
-
-      <DishModal
-        open={dishModal}
-        onClose={closedish}
-        onSubmit={handleSubmit}
-        editDish={editDish}
-      />
-
-      <DeleteModal
-        open={deleteModal}
-        onClose={closeDelete}
-        onConfirm={handleDelete}
-        dishName={deleteTarget?.name}
-      />
+      <DishModal open={dishModal} onClose={closedish} onSubmit={handleSubmit} editDish={editDish} />
+      <DeleteModal open={deleteModal} onClose={closeDelete} onConfirm={handleDelete} dishName={deleteTarget?.name} />
     </div>
   );
 }
