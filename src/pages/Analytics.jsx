@@ -44,7 +44,7 @@ export default function Analytics() {
         <div style={{ paddingLeft: "4px" }}>
           <h1 style={{ 
             fontFamily: "'Syne', sans-serif", 
-            fontSize: isMobile ? "1.1rem" : "1.3rem", // Scaled down for mobile viewports
+            fontSize: isMobile ? "1.1rem" : "1.3rem", 
             fontWeight: 800, 
             letterSpacing: "-0.02em",
             textTransform: "uppercase",
@@ -52,9 +52,7 @@ export default function Analytics() {
           }}>
             Sales & <span style={{ color: "var(--accent)" }}>Reports</span>
           </h1>
-          <p style={{ color: "var(--text3)", fontSize: "0.75rem", marginTop: 4 }}>
-            Easy-to-understand calculations of your store's performance.
-          </p>
+          {/* Description paragraph tag removed cleanly from this block */}
         </div>
 
         {/* Premium Segmented Controls Dock Profile */}
@@ -124,7 +122,7 @@ export default function Analytics() {
               Money Earned
             </span>
             <span style={{ 
-              fontSize: isMobile ? "1.25rem" : "1.5rem", // Dynamically resized to avoid horizontal overflow text clipping
+              fontSize: isMobile ? "1.25rem" : "1.5rem", 
               fontWeight: 800, 
               fontFamily: "'Syne', sans-serif", 
               color: "var(--text)", 
@@ -153,7 +151,7 @@ export default function Analytics() {
               Total Dishes Prepared
             </span>
             <span style={{ 
-              fontSize: isMobile ? "1.25rem" : "1.5rem", // Dynamically resized to avoid horizontal overflow text clipping
+              fontSize: isMobile ? "1.25rem" : "1.5rem", 
               fontWeight: 800, 
               fontFamily: "'Syne', sans-serif", 
               color: "var(--text)", 
@@ -171,7 +169,6 @@ export default function Analytics() {
       <div className="floating-glass" style={{ 
         background: "var(--surface)", borderRadius: "20px", padding: isMobile ? "16px" : "24px", width: "100%", display: "flex", flexDirection: "column", gap: "1.5rem"
       }}>
-        {/* Fixed Header Layout: Switches direction on mobile viewports to prevent overlapping badges */}
         <div style={{ 
           display: "flex", 
           flexDirection: isMobile ? "column" : "row", 

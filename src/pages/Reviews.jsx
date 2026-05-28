@@ -135,7 +135,7 @@ export default function Reviews() {
           filteredReviews.map((rev) => (
             <div key={rev.id} className="floating-glass" style={{ background: "var(--surface)", borderRadius: "14px", padding: "16px", display: "flex", flexDirection: "column", gap: 8 }}>
               
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
                 <div style={{ display: "flex", flexDirection: "column" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                     <span style={{ fontWeight: 800, fontSize: "0.95rem" }}>{rev.user}</span>
@@ -153,15 +153,27 @@ export default function Reviews() {
                   </span>
                 </div>
                 
-                <div style={{ 
-                  display: "flex", 
-                  gap: 2, 
-                  color: rev.rating <= 2 ? "var(--text3)" : "#eab308", 
-                  filter: rev.rating > 2 ? "drop-shadow(0 0 4px rgba(234,179,8,0.3))" : "none" 
-                }}>
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} size={12} fill={i < rev.rating ? (rev.rating <= 2 ? "var(--danger)" : "currentColor") : "none"} stroke={i < rev.rating ? (rev.rating <= 2 ? "var(--danger)" : "currentColor") : "currentColor"} />
-                  ))}
+                {/* RIGHT SIDE META CONTAINER: Houses both Helpful Vote and Star Ratings directly side-by-side */}
+                <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "nowrap" }}>
+                  
+                  {/* Helpful Student Vote Indicator Badge */}
+                  <div style={{ display: "flex", gap: 4, alignItems: "center", color: "var(--text3)", fontSize: "0.7rem", fontWeight: 700, background: "var(--surface2)", padding: "4px 8px", borderRadius: "6px", border: "1px solid var(--border)" }}>
+                    <Heart size={10} color="var(--danger)" fill={rev.rating >= 4 ? "var(--danger)" : "none"} />
+                    <span style={{ whiteSpace: "nowrap" }}>Helpful Student Vote</span>
+                  </div>
+
+                  {/* Star Elements Grid */}
+                  <div style={{ 
+                    display: "flex", 
+                    gap: 2, 
+                    color: rev.rating <= 2 ? "var(--text3)" : "#eab308", 
+                    filter: rev.rating > 2 ? "drop-shadow(0 0 4px rgba(234,179,8,0.3))" : "none" 
+                  }}>
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} size={12} fill={i < rev.rating ? (rev.rating <= 2 ? "var(--danger)" : "currentColor") : "none"} stroke={i < rev.rating ? (rev.rating <= 2 ? "var(--danger)" : "currentColor") : "currentColor"} />
+                    ))}
+                  </div>
+
                 </div>
               </div>
 
@@ -169,12 +181,9 @@ export default function Reviews() {
                 "{rev.comment}"
               </p>
 
+              {/* Card Bottom Row: Only displays timestamp info cleanly now */}
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1px solid var(--border)", paddingTop: 8, marginTop: 2 }}>
                 <span style={{ fontSize: "0.72rem", color: "var(--text3)", fontWeight: 600 }}>{rev.date}</span>
-                <div style={{ display: "flex", gap: 4, alignItems: "center", color: "var(--text3)", fontSize: "0.7rem", fontWeight: 700, background: "var(--surface2)", padding: "3px 8px", borderRadius: "6px", border: "1px solid var(--border)" }}>
-                  <Heart size={10} color="var(--danger)" fill={rev.rating >= 4 ? "var(--danger)" : "none"} />
-                  <span>Helpful Student Vote</span>
-                </div>
               </div>
 
             </div>
