@@ -41,7 +41,7 @@ export default function Dashboard() {
       
       <div style={{ position: "relative", zIndex: 1, display: "flex", flexDirection: "column", gap: "1rem", width: "100%" }}>
         
-        {/* Minimal Header Bar Row */}
+        {/* Header Ribbon Section */}
         <div style={{ 
           display: "flex", 
           flexDirection: isMobile ? "column" : "row", 
@@ -63,7 +63,7 @@ export default function Dashboard() {
             </h1>
           </div>
           
-          {/* Neon Grid Integrated Timer Box */}
+          {/* Integrated Timer Box */}
           <div className="floating-glass" style={{ 
             display: "flex", 
             alignItems: "center", 
@@ -132,7 +132,7 @@ export default function Dashboard() {
           {/* Header Indicators */}
           <div style={{ display: "flex", alignItems: "center", gap: 12, justifyContent: "space-between", marginBottom: "1.25rem" }}>
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#10b981", boxShadow: "0 0 10px #10b981, 0 0 20px #10b981" }} />
+              <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#10b981", boxShadow: "0 0 10px #10b981" }} />
               <h3 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: "0.85rem", letterSpacing: "-0.01em" }}>
                 Weekly Traffic Index
               </h3>
@@ -140,15 +140,14 @@ export default function Dashboard() {
             
             <div style={{ 
               display: "flex", alignItems: "center", gap: 5, background: "rgba(16,185,129,0.06)", 
-              padding: "4px 10px", borderRadius: "8px", border: "1px solid rgba(16,185,129,0.2)",
-              boxShadow: "0 0 12px rgba(16,185,129,0.05)"
+              padding: "4px 10px", borderRadius: "8px", border: "1px solid rgba(16,185,129,0.2)"
             }}>
               <Zap size={11} color="#10b981" fill="#10b981" stroke="none" />
               <span style={{ fontSize: "0.7rem", fontWeight: 800, color: "#10b981", textTransform: "uppercase" }}>Live Stream</span>
             </div>
           </div>
 
-          {/* Core Interactive Vector Stage Box Wrapper */}
+          {/* Core SVG Workspace Stage */}
           <div style={{ position: "relative", width: "100%", height: "auto" }}>
             <svg 
               viewBox="0 0 480 165" 
@@ -176,17 +175,16 @@ export default function Dashboard() {
                 </marker>
               </defs>
 
-              {/* Underlying Blueprint Guide Grid Wireframes */}
+              {/* Horizontal Blueprint Guide Grid Lines */}
               {[32, 64, 96, 128].map((gridY, i) => (
                 <line key={i} x1="15" y1={gridY} x2="465" y2={gridY} stroke="var(--border)" strokeWidth="1" strokeDasharray="3 6" opacity="0.4" />
               ))}
 
-              {/* FIXED: Standardized responsive layout loop for lines, graph nodes, and bottom text days inside SVG */}
+              {/* Vertical Guide Pins & Day Labels Mapping */}
               {points.map((p, i) => {
                 const isActive = activeNode === i;
                 return (
                   <g key={i} cursor="pointer" onClick={() => setActiveNode(i)}>
-                    {/* Exact Replica Vertical Alignment Needles/Pins */}
                     <line 
                       x1={p.x} 
                       y1="140" 
@@ -198,7 +196,7 @@ export default function Dashboard() {
                       style={{ transition: "all 0.2s ease" }}
                     />
                     
-                    {/* FIXED: Native SVG Day Text labels that shrink correctly with ratio aspect bounds */}
+                    {/* FIXED: Scalable internal day tags matching the ratio of the view bounds */}
                     <text
                       x={p.x}
                       y="156"
@@ -218,13 +216,13 @@ export default function Dashboard() {
                 );
               })}
 
-              {/* Dynamic Shading Gradient Fill */}
+              {/* Dynamic Shading Gradient Fill Area */}
               <path 
                 d={`${pathString} L ${points[points.length - 1].x} 140 L ${points[0].x} 140 Z`} 
                 fill="url(#cyber-fill)" 
               />
 
-              {/* The Glow Laser Green Line Path */}
+              {/* Glowing Laser Green Path */}
               <path 
                 d={pathString} 
                 fill="none" 
@@ -235,7 +233,7 @@ export default function Dashboard() {
                 style={{ strokeLinecap: "round", strokeLinejoin: "round" }}
               />
 
-              {/* Touch Point Interactive Core Capture Circles */}
+              {/* Target Data Anchor Vertices */}
               {points.map((p, i) => {
                 const isActive = activeNode === i;
                 return (
@@ -252,7 +250,7 @@ export default function Dashboard() {
                     />
                     <circle cx={p.x} cy={p.y} r="2" fill="#ffffff" opacity={isActive ? "1" : "0.5"} />
 
-                    {/* FIXED: Floating data overlay popup converted into native SVG architecture to avoid crowding elements */}
+                    {/* FIXED: Tooltip popup drawn natively into SVG vectors to completely isolate space metrics */}
                     {isActive && (
                       <g transform={`translate(${p.x}, ${p.y - 12})`}>
                         <rect
@@ -274,7 +272,7 @@ export default function Dashboard() {
                           fontWeight="800"
                           fontFamily="monospace"
                         >
-                          {p.count} Bills
+                          {p.count} B
                         </text>
                       </g>
                     )}
