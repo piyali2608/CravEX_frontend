@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { IndianRupee, Utensils, Activity } from "lucide-react"; // Swapped DollarSign for IndianRupee
+import { IndianRupee, Utensils, Activity } from "lucide-react"; 
 import { useMediaQuery } from "../hooks/useMediaQuery";
 
 export default function Analytics() {
@@ -44,7 +44,7 @@ export default function Analytics() {
         <div style={{ paddingLeft: "4px" }}>
           <h1 style={{ 
             fontFamily: "'Syne', sans-serif", 
-            fontSize: "1.3rem", 
+            fontSize: isMobile ? "1.1rem" : "1.3rem", // Scaled down for mobile viewports
             fontWeight: 800, 
             letterSpacing: "-0.02em",
             textTransform: "uppercase",
@@ -106,23 +106,31 @@ export default function Analytics() {
       {/* Aggregate Scorecard Dashboard Row */}
       <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: "1rem", width: "100%" }}>
         
-        {/* Revenue Metric Block - Updated badge icon to match image_774efb.png */}
+        {/* Revenue Metric Block */}
         <div className="floating-glass" style={{ 
-          flex: 1, background: "var(--surface)", borderRadius: "16px", padding: "20px", display: "flex", alignItems: "center", gap: 16 
+          flex: 1, background: "var(--surface)", borderRadius: "16px", padding: isMobile ? "14px 16px" : "20px", display: "flex", alignItems: "center", gap: 16 
         }}>
           <div style={{ 
             width: 42, height: 42, borderRadius: "12px", 
             background: "var(--surface2)", border: "1.5px solid var(--border)", 
             display: "flex", alignItems: "center", justifyContent: "center", 
-            color: "var(--accent)", boxShadow: "0 4px 12px var(--accent-glow)" 
+            color: "var(--accent)", boxShadow: "0 4px 12px var(--accent-glow)",
+            flexShrink: 0
           }}>
             <IndianRupee size={18} strokeWidth={2.5} />
           </div>
-          <div style={{ display: "flex", flexDirection: "column" }}>
+          <div style={{ display: "flex", flexDirection: "column", minWidth: 0 }}>
             <span style={{ color: "var(--text3)", fontSize: "0.7rem", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.05em" }}>
               Money Earned
             </span>
-            <span style={{ fontSize: "1.5rem", fontWeight: 800, fontFamily: "'Syne', sans-serif", color: "var(--text)", marginTop: 2 }}>
+            <span style={{ 
+              fontSize: isMobile ? "1.25rem" : "1.5rem", // Dynamically resized to avoid horizontal overflow text clipping
+              fontWeight: 800, 
+              fontFamily: "'Syne', sans-serif", 
+              color: "var(--text)", 
+              marginTop: 2,
+              whiteSpace: "nowrap"
+            }}>
               {activeData.revenue}
             </span>
           </div>
@@ -130,21 +138,28 @@ export default function Analytics() {
 
         {/* Volume Metric Block */}
         <div className="floating-glass" style={{ 
-          flex: 1, background: "var(--surface)", borderRadius: "16px", padding: "20px", display: "flex", alignItems: "center", gap: 16 
+          flex: 1, background: "var(--surface)", borderRadius: "16px", padding: isMobile ? "14px 16px" : "20px", display: "flex", alignItems: "center", gap: 16 
         }}>
           <div style={{ 
             width: 42, height: 42, borderRadius: "12px", 
             background: "var(--surface2)", border: "1.5px solid var(--border)", 
             display: "flex", alignItems: "center", justifyContent: "center", 
-            color: "var(--accent)" 
+            color: "var(--accent)", flexShrink: 0
           }}>
             <Utensils size={18} strokeWidth={2.2} />
           </div>
-          <div style={{ display: "flex", flexDirection: "column" }}>
+          <div style={{ display: "flex", flexDirection: "column", minWidth: 0 }}>
             <span style={{ color: "var(--text3)", fontSize: "0.7rem", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.05em" }}>
               Total Dishes Prepared
             </span>
-            <span style={{ fontSize: "1.5rem", fontWeight: 800, fontFamily: "'Syne', sans-serif", color: "var(--text)", marginTop: 2 }}>
+            <span style={{ 
+              fontSize: isMobile ? "1.25rem" : "1.5rem", // Dynamically resized to avoid horizontal overflow text clipping
+              fontWeight: 800, 
+              fontFamily: "'Syne', sans-serif", 
+              color: "var(--text)", 
+              marginTop: 2,
+              whiteSpace: "nowrap"
+            }}>
               {activeData.plates}
             </span>
           </div>
@@ -154,12 +169,24 @@ export default function Analytics() {
 
       {/* Primary Analytics Chart Element Area */}
       <div className="floating-glass" style={{ 
-        background: "var(--surface)", borderRadius: "20px", padding: "24px", width: "100%", display: "flex", flexDirection: "column", gap: "1.5rem"
+        background: "var(--surface)", borderRadius: "20px", padding: isMobile ? "16px" : "24px", width: "100%", display: "flex", flexDirection: "column", gap: "1.5rem"
       }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        {/* Fixed Header Layout: Switches direction on mobile viewports to prevent overlapping badges */}
+        <div style={{ 
+          display: "flex", 
+          flexDirection: isMobile ? "column" : "row", 
+          justifyContent: "space-between", 
+          alignItems: isMobile ? "flex-start" : "center",
+          gap: isMobile ? 12 : 0
+        }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
             <div style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--success)", boxShadow: "0 0 10px var(--success)" }} />
-            <span style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: "0.95rem", textTransform: "uppercase" }}>
+            <span style={{ 
+              fontFamily: "'Syne', sans-serif", 
+              fontWeight: 800, 
+              fontSize: isMobile ? "0.85rem" : "0.95rem", 
+              textTransform: "uppercase" 
+            }}>
               Income Vector Trend
             </span>
           </div>
@@ -182,7 +209,7 @@ export default function Analytics() {
             <line x1="40" y1="110" x2="660" y2="110" stroke="var(--border)" strokeDasharray="4 4" strokeWidth={1} style={{ opacity: 0.4 }} />
             <line x1="40" y1="160" x2="660" y2="160" stroke="var(--border)" strokeDasharray="4 4" strokeWidth={1} style={{ opacity: 0.4 }} />
 
-            {/* SEGMENT LOOP GENERATOR: Evaluates slope and conditionally shades the vectors */}
+            {/* SEGMENT LOOP GENERATOR */}
             {activeData.trend.slice(0, -1).map((point, index) => {
               const nextPoint = activeData.trend[index + 1];
               const isDown = nextPoint.y > point.y; 
@@ -192,7 +219,6 @@ export default function Analytics() {
               
               return (
                 <g key={index}>
-                  {/* Dynamic Gradient Area Definitions */}
                   <defs>
                     <linearGradient id={areaGradientId} x1="0" y1="0" x2="0" y2="1">
                       <stop offset="0%" stopColor={strokeColor} stopOpacity="0.18" />
@@ -200,14 +226,12 @@ export default function Analytics() {
                     </linearGradient>
                   </defs>
 
-                  {/* Isolated Segment Area Fill Poly-Block */}
                   <path
                     d={`M ${point.x} 200 L ${point.x} ${point.y} L ${nextPoint.x} ${nextPoint.y} L ${nextPoint.x} 200 Z`}
                     fill={`url(#${areaGradientId})`}
                     style={{ transition: "all 0.3s ease" }}
                   />
 
-                  {/* Independent Vector Connection Rail Segment */}
                   <line
                     x1={point.x}
                     y1={point.y}
@@ -231,7 +255,6 @@ export default function Analytics() {
 
               return (
                 <g key={index}>
-                  {/* Node Anchor Center Core */}
                   <circle
                     cx={point.x}
                     cy={point.y}
@@ -242,7 +265,6 @@ export default function Analytics() {
                     style={{ transition: "all 0.3s ease" }}
                   />
 
-                  {/* Micro Floating Info Card Tag */}
                   <g transform={`translate(${point.x - 28}, ${point.y - 22})`}>
                     <rect
                       width={56}
@@ -266,7 +288,6 @@ export default function Analytics() {
                     </text>
                   </g>
 
-                  {/* X-Axis Day Tag Strings */}
                   <text
                     x={point.x}
                     y={210}
