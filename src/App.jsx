@@ -14,9 +14,20 @@ import { Sun, Moon } from "lucide-react";
 export default function App() {   
   const { theme, toggle: onToggleTheme } = useTheme();   
   const isMobile = useMediaQuery("(max-width: 768px)");   
-  const [isCollapsed, setIsCollapsed] = useState(false);   
+  
+  // 1. Initialize state directly from localStorage so it remembers its state on refresh
+  const [isCollapsed, setIsCollapsed] = useState(() => {
+    const savedState = localStorage.getItem("cravex_sidebar_collapsed");
+    return savedState ? JSON.parse(savedState) : false;
+  });   
+  
   const [isStoreOpen, setIsStoreOpen] = useState(true);   
   const { toasts, show: showToast, dismiss: dismissToast } = useToast();
+
+  // 2. Automatically save the sidebar state to memory whenever it gets toggled
+  useEffect(() => {
+    localStorage.setItem("cravex_sidebar_collapsed", JSON.stringify(isCollapsed));
+  }, [isCollapsed]);
 
   const getTabFromHash = () => {     
     const cleanHash = window.location.hash.replace("#/", "");     
