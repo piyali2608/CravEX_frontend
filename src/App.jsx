@@ -21,13 +21,23 @@ export default function App() {
     return savedState ? JSON.parse(savedState) : false;
   });   
   
-  const [isStoreOpen, setIsStoreOpen] = useState(true);   
+  // FIXED: Initialize store open/close state directly from localStorage to survive page refreshes
+  const [isStoreOpen, setIsStoreOpen] = useState(() => {
+    const savedStoreState = localStorage.getItem("cravex_store_open_status");
+    return savedStoreState ? JSON.parse(savedStoreState) : true;
+  });   
+  
   const { toasts, show: showToast, dismiss: dismissToast } = useToast();
 
   // 2. Automatically save the sidebar state to memory whenever it gets toggled
   useEffect(() => {
     localStorage.setItem("cravex_sidebar_collapsed", JSON.stringify(isCollapsed));
   }, [isCollapsed]);
+
+  // FIXED: Automatically save the store status to memory whenever it gets toggled
+  useEffect(() => {
+    localStorage.setItem("cravex_store_open_status", JSON.stringify(isStoreOpen));
+  }, [isStoreOpen]);
 
   const getTabFromHash = () => {     
     const cleanHash = window.location.hash.replace("#/", "");     
